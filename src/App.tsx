@@ -1,80 +1,76 @@
-import React from "react";
-import styled from "@emotion/styled";
-import { Layout, Menu, MenuProps } from "antd";
-// prettier-ignore
-import { useLocation, useNavigate, Route, Routes, RouteProps } from "react-router-dom";
-import { TeamOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  ProCard,
+  ProForm,
+  ProFormDependency,
+  ProFormDigit,
+  ProFormItem,
+  ProFormText,
+} from "@ant-design/pro-components";
+import DynamicFareCard from "./DynamicFareCard";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Space } from "antd";
+import FareInputNumber from "./FareInputNumber";
 
-import Register from "./pages/Register";
-import Management from "./pages/Management";
+export default () => {
+  const [form] = ProForm.useForm();
 
-const { Content, Sider } = Layout;
-
-const StyledLayout = styled(Layout)`
-  min-height: 100vh;
-`;
-
-const StyledContent = styled(Content)`
-  margin: 12px;
-  padding: 12px;
-  background: #fff;
-`;
-
-const menuItems: MenuProps["items"] = [
-  {
-    label: "注册用户",
-    key: "/user/register",
-    icon: <UserOutlined />,
-  },
-  {
-    label: "用户管理",
-    key: "/user/management",
-    icon: <TeamOutlined />,
-  },
-];
-
-const routes: RouteProps[] = [
-  {
-    element: <Register />,
-    path: "/user/register",
-  },
-  {
-    element: <Management />,
-    path: "/user/management",
-  },
-];
-
-const App: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const selectedKeys = [location.pathname];
-
-  const handleMenuClick: MenuProps["onClick"] = (info) => {
-    navigate(info.key);
+  const handleBaseFareAction = (action: "plus" | "minus") => {
+    const baseFare = form.getFieldValue("baseFare") ?? 0;
+    form.setFieldValue(
+      "baseFare",
+      action === "plus" ? baseFare + 1 : baseFare - 1
+    );
   };
 
   return (
-    <StyledLayout style={{ minHeight: "100vh" }}>
-      <Sider>
-        <Menu
-          selectedKeys={selectedKeys}
-          onClick={handleMenuClick}
-          items={menuItems}
-          theme="dark"
+    <ProCard title="Demo" style={{ width: 400 }}>
+      <ProForm
+        form={form}
+        onFinish={async (values) => {
+          console.log(values);
+        }}
+        layout="horizontal"
+        labelCol={{ flex: "100px" }}
+        initialValues={{
+          area: 4902216.49,
+          baseFare: 2,
+          dynamicFare: {
+            distance: [
+              {
+                start: 5,
+                end: 10,
+                fare: 5,
+              },
+            ],
+            timeRange: [
+              {
+                start: "3:00",
+                end: "4:00",
+                fare: 5,
+              },
+            ],
+          },
+        }}
+      >
+        <ProFormText
+          name="name"
+          label="范围名称"
+          rules={[{ required: true, message: "请输入范围名称" }]}
+          width={240}
         />
-      </Sider>
-      <Layout>
-        <StyledContent>
-          <Routes>
-            {routes.map((route, index) => (
-              <Route {...route} key={index} />
-            ))}
-          </Routes>
-        </StyledContent>
-      </Layout>
-    </StyledLayout>
+        <ProFormText
+          label="配送面积"
+          name="area"
+          readonly
+          addonAfter="km²"
+          width={400}
+          required
+        />
+        <ProFormItem label="起送价" name="baseFare">
+          <FareInputNumber style={{ width: 150 }} min={2} max={16} />
+        </ProFormItem>
+        <DynamicFareCard form={form} />
+      </ProForm>
+    </ProCard>
   );
 };
-
-export default App;

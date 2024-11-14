@@ -1,29 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { HashRouter } from "react-router-dom";
-import data from "./common/data";
-import "./index.css";
-
-// mock
-const users = localStorage.getItem("users");
-if (!users) {
-  localStorage.setItem("users", JSON.stringify(data.users));
-}
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <HashRouter
-      future={{
-        v7_startTransition: true,
-      }}
-    >
-      <App />
-    </HashRouter>
+    <App />
   </React.StrictMode>
 );
 
