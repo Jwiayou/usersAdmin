@@ -18,6 +18,8 @@ const Management: React.FC = () => {
     [GetUsersRequest]
   >((params) => getUsers(params));
 
+  const renderSex = (): ColumnType<User>['render'] = () 
+
   const renderOperator: ColumnType<User>["render"] = (_, reord) => {
     return <Button type="link">删除</Button>;
   };
@@ -63,11 +65,12 @@ const Management: React.FC = () => {
           {
             title: "性别",
             dataIndex: "sex",
+            render: renderSex,
             width: 80,
           },
           {
             title: "生日",
-            dataIndex: "birthday",
+            render: renderTime,
             width: 120,
           },
           {

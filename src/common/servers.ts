@@ -1,6 +1,5 @@
 import { message } from "antd";
 import { User } from "./data";
-import { Data } from "ahooks/lib/usePagination/types";
 
 function userPromiseFn<T = any>(fn: (users: User[]) => any): Promise<T> {
   return new Promise((resolve) => {
